@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    
+     // State properties to store the alert title, the state ofhte score viewer and the player's score
     @State private var scoreTitle = ""
     @State private var showingScore = false
     @State private var score = 0
@@ -18,32 +18,52 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            AngularGradient(colors: [.red, .orange, .yellow, .teal, .blue, .indigo, .purple], center: .center)
+            AngularGradient(colors: [.red, .orange, .yellow, .teal, .blue, .white, .red], center: .top)
                 .ignoresSafeArea()
             
-            VStack(spacing: 20) {
-                VStack {
-                    Text("What is the Flag of")
-                        .bold()
-                        .font(.title)
-                    Text(countries[correctAns])
-                        .bold()
-                        .font(.title2)
-                }
-                
-                ForEach(0..<3) { number in
-                    Button {
-                        //Tapped
-                        flagTapped(number)
+            VStack {
+                Spacer()
+                Text("Guess the flag").font(.largeTitle).bold().foregroundColor(.white)
+                VStack(spacing: 30) {
+                    VStack {
+                        Text("What is the Flag of")
+                            .foregroundStyle(.secondary)
+                            .bold()
                         
-                    } label: {
-                        Image(countries[number])
-                            .renderingMode(.original)
+                        Text(countries[correctAns])
+                            .font(.largeTitle.bold())
+                    }
+                    
+                    ForEach(0..<3) { number in
+                        Button {
+                            //Tapped
+                            flagTapped(number)
+                            
+                        } label: {
+                            Image(countries[number])
+                                .renderingMode(.original)
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                                .shadow(radius: 10)
+                        }
                     }
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 25)
+                .background(.ultraThinMaterial)
+                .clipShape(RoundedRectangle(cornerRadius: 25.0))
+                
+                Spacer()
+                Spacer()
+                
+                Text("Score: \(score)")
+                    .foregroundColor(.white)
+                    .font(.title2.bold())
+                Spacer()
             }
+            .padding(.horizontal)
+                
         }
-        alert(scoreTitle, isPresented: $showingScore) {
+        .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
             Text("Your score is \(score)")
@@ -53,10 +73,10 @@ struct ContentView: View {
     
     func flagTapped(_ number: Int){
         if number == correctAns {
-            scoreTitle = "Correct"
+            scoreTitle = "Correct!"
             score += 1
         } else {
-            scoreTitle = "Wrong"
+            scoreTitle = "Wrong!"
         }
         
         showingScore = true
