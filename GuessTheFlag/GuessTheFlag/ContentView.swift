@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
      // State properties to store the alert title, the state ofhte score viewer and the player's score
     @State private var scoreTitle = ""
+    @State private var scoreMessage = ""
     @State private var showingScore = false
     @State private var score = 0
     
@@ -26,7 +27,7 @@ struct ContentView: View {
                 Text("Guess the flag").font(.largeTitle).bold().foregroundColor(.white)
                 VStack(spacing: 30) {
                     VStack {
-                        Text("What is the Flag of")
+                        Text("Tap the flag of")
                             .foregroundStyle(.secondary)
                             .bold()
                         
@@ -66,19 +67,20 @@ struct ContentView: View {
         .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
-            Text("Your score is \(score)")
+            Text(scoreMessage)
         }
         
     }
     
     func flagTapped(_ number: Int){
         if number == correctAns {
-            scoreTitle = "Correct!"
+            scoreTitle = "🥳Correct"
+            scoreMessage = "You guessed the right flag!"
             score += 1
         } else {
-            scoreTitle = "Wrong!"
+            scoreTitle = "😅Wrong"
+            scoreMessage = "You tapped the flag of \(countries[number])!"
         }
-        
         showingScore = true
     }
     
