@@ -8,16 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
-     // State properties to store the alert title, the state ofhte score viewer and the player's score
+     // State properties to store the alert title, the state ofhte score viewer and the player's score.
     @State private var scoreTitle = ""
     @State private var scoreMessage = ""
     @State private var showingScore = false
     @State private var score = 0
+    @State private var done =  false
+    @State private var count =  0
     
+    // List of countries and a random assignment for the right answer among the displayed flags.
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Monaco", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAns = Int.random(in: 0...2)
     
     var body: some View {
+        
+        // Colorful background.
         ZStack {
             AngularGradient(colors: [.red, .orange, .yellow, .teal, .blue, .white, .red], center: .top)
                 .ignoresSafeArea()
@@ -25,6 +30,8 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 Text("Guess the flag").font(.largeTitle).bold().foregroundColor(.white)
+                
+                // Flag options.
                 VStack(spacing: 30) {
                     VStack {
                         Text("Tap the flag of")
@@ -56,6 +63,7 @@ struct ContentView: View {
                 Spacer()
                 Spacer()
                 
+                // Score display at the bottom of the screen.
                 Text("Score: \(score)")
                     .foregroundColor(.white)
                     .font(.title2.bold())
@@ -64,29 +72,50 @@ struct ContentView: View {
             .padding(.horizontal)
                 
         }
+        // Dialog box to present score.
         .alert(scoreTitle, isPresented: $showingScore) {
             Button("Continue", action: askQuestion)
         } message: {
             Text(scoreMessage)
         }
-        
+        // Dialog box to present final score and restart button.
+        .alert("Done", isPresented: $done) {
+            Button("Restart", action: restart)
+        } message: {
+            Text("Your final score is \(score)")
+        }
     }
     
+    // Action executed for every flag tap.
     func flagTapped(_ number: Int){
-        if number == correctAns {
+        count += 1
+        if count >= 8 {
+            showingScore = true
+            done = true
+        } else if number == correctAns {
             scoreTitle = "🥳Correct"
             scoreMessage = "You guessed the right flag!"
             score += 1
+            showingScore = true
         } else {
             scoreTitle = "😅Wrong"
             scoreMessage = "You tapped the flag of \(countries[number])!"
+            showingScore = true
         }
-        showingScore = true
     }
     
+    // Reshuffles the flag options displayed and randomizes the correct answer.
     func askQuestion() {
         countries.shuffle()
         correctAns = Int.random(in: 0...2)
+    }
+    
+    // Resets the score, answer count and calls the askQuestion() function to reshuffle the flag options displayed and randomize the correct answer.
+    func restart() {
+        askQuestion()
+        done = true
+        score = 0
+        count = 0
     }
 }
 
