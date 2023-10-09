@@ -16,6 +16,17 @@ struct ContentView: View {
     @State private var done =  false
     @State private var count =  0
     
+    // Custon View that renders one flag image using the specified country name and modifiers.
+    struct FlagImage: View {
+        let country: String
+        var body: some View {
+            Image(country)
+                .renderingMode(.original)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .shadow(radius: 10)
+        }
+    }
+    
     // List of countries and a random assignment for the right answer among the displayed flags.
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Monaco", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAns = Int.random(in: 0...2)
@@ -48,10 +59,7 @@ struct ContentView: View {
                             flagTapped(number)
                             
                         } label: {
-                            Image(countries[number])
-                                .renderingMode(.original)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
-                                .shadow(radius: 10)
+                            FlagImage(country: countries[number])
                         }
                     }
                 }

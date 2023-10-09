@@ -11,7 +11,7 @@ struct ContentView: View {
     
     @State private var amount = 0.0
     @State private var numPeople = 0
-    @State private var tipPct = 20
+    @State private var tipPct = 0
     @FocusState private var amtIsFocused: Bool
     @FocusState private var numPeopleIsFocused: Bool
     private let currencyFormat = FloatingPointFormatStyle<Double>.Currency(code: Locale.current.currency?.identifier ?? "USD")
@@ -59,14 +59,16 @@ struct ContentView: View {
                             Text($0, format: .percent)
                         }
                     }
-                    .pickerStyle(.menu)
+                    .pickerStyle(.wheel)
                     
                 } header: {
                     Text("Tip")
                 }
                 
                 Section {
+                    // Display the total in black if the tip is > 0% or in red if no tip is added.
                     Text(total, format: currencyFormat)
+                        .foregroundStyle(tipPct == 0 ? .red : .primary)
                 } header: {
                     Text("total cost")
                 }
