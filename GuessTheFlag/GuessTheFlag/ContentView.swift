@@ -15,6 +15,8 @@ struct ContentView: View {
     @State private var score = 0
     @State private var done =  false
     @State private var count =  0
+    @State private var animationAmount = 0.0
+    @State private var tappedIndex: Int?//
     
     // Custon View that renders one flag image using the specified country name and modifiers.
     struct FlagImage: View {
@@ -61,6 +63,11 @@ struct ContentView: View {
                         } label: {
                             FlagImage(country: countries[number])
                         }
+//                        .blur(radius: tappedIndex != number ? 0 : 6.0)
+                        .rotation3DEffect(
+                            .degrees(tappedIndex == number ? animationAmount : 0.0), axis: (x: 0.0, y: 1.0, z: 0.0)
+                        )
+                        
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -97,6 +104,11 @@ struct ContentView: View {
     // Action executed for every flag tap.
     func flagTapped(_ number: Int){
         count += 1
+        // Update the selected flag with the desired animation.
+        withAnimation {
+            tappedIndex = number
+            animationAmount = 360
+        }
         if count >= 8 {
             showingScore = true
             done = true
@@ -110,6 +122,7 @@ struct ContentView: View {
             scoreMessage = "You tapped the flag of \(countries[number])!"
             showingScore = true
         }
+        tappedIndex = 99
     }
     
     // Reshuffles the flag options displayed and randomizes the correct answer.
