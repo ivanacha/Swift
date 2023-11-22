@@ -37,12 +37,12 @@ struct ContentView: View {
         
         // Colorful background.
         ZStack {
-            AngularGradient(colors: [.red, .orange, .yellow, .teal, .blue, .white, .red], center: .top)
+            AngularGradient(colors: [.red, .orange, .yellow, .teal, .blue, .red], center: .center)
                 .ignoresSafeArea()
             
             VStack {
                 Spacer()
-                Text("Guess the flag").font(.largeTitle).bold().foregroundColor(.white)
+                Text("Guess the flag").font(.largeTitle).bold().foregroundColor(.primary)
                 
                 // Flag options.
                 VStack(spacing: 30) {
@@ -63,7 +63,7 @@ struct ContentView: View {
                         } label: {
                             FlagImage(country: countries[number])
                         }
-//                        .blur(radius: tappedIndex != number ? 0 : 6.0)
+                        .blur(radius: tappedIndex == number ? 7.0 : 0)
                         .rotation3DEffect(
                             .degrees(tappedIndex == number ? animationAmount : 0.0), axis: (x: 0.0, y: 1.0, z: 0.0)
                         )
@@ -106,7 +106,6 @@ struct ContentView: View {
         count += 1
         // Update the selected flag with the desired animation.
         withAnimation {
-            tappedIndex = number
             animationAmount = 360
         }
         if count >= 8 {
@@ -134,7 +133,7 @@ struct ContentView: View {
     // Resets the score, answer count and calls the askQuestion() function to reshuffle the flag options displayed and randomize the correct answer.
     func restart() {
         askQuestion()
-        done = true
+        done = false
         score = 0
         count = 0
     }
